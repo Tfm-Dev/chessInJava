@@ -1,4 +1,4 @@
-# Chess Game In Java
+# Chess Game In Java 🎮 🕹 ♟
 
 ## Description
 
