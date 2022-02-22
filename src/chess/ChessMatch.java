@@ -21,6 +21,7 @@ public class ChessMatch {
     private Board board;
     private boolean check;
     private boolean checkMate;
+    private boolean draw;
     private ChessPiece enPassantVulnerable;
     private ChessPiece promoted;
 
@@ -48,6 +49,10 @@ public class ChessMatch {
 
     public boolean getCheckMate() {
         return checkMate;
+    }
+
+    public boolean getDraw() {
+        return draw;
     }
 
     public ChessPiece getEnPassantVulnerable() {
@@ -94,6 +99,7 @@ public class ChessMatch {
             }
         }
         check = (testCheck(opponent(currentPlayer))) ? true : false;
+        draw = testDraw(opponent(currentPlayer));
         if (testCheckMate(opponent(currentPlayer))) checkMate = true;
         else nextTurn();
         // #SpecialMove En Passant
@@ -251,6 +257,22 @@ public class ChessMatch {
                     }
                 } 
             }
+        }
+        return true;
+    }
+
+    private boolean testDraw(Color color) {
+        List<Piece> list;
+        // King vs King
+        list = new ArrayList<>();
+        for (Piece p : piecesOnTheBoard) {
+            if (p instanceof King) list.add(p);
+        }
+        if (!piecesOnTheBoard.equals(list)) return false;
+        // Not check and not Possible Move
+        list = piecesOnTheBoard.stream().filter(x -> ((ChessPiece) x).getColor() == color).collect(Collectors.toList());
+        for (Piece p : list) {
+            if (p.isThereAnyPossibleMove() && !(p instanceof King)) return false;
         }
         return true;
     }
